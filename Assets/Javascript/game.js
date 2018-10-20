@@ -1,5 +1,5 @@
 //Make Array and Variables for holding data 
-var wordOptions = ["blue", "purple", "orange", "azure", "cream", "crimson", "green", "olive"]
+var wordOptions = ["blue", "purple", "orange", "azure", "cream", "crimson", "green", "olive", "ruby", "sapphire"]
 // Randomly selected word from array
 var selectedWord = ""
 var lettersinWord = [];
@@ -46,15 +46,16 @@ function startGame () {
 // Determine if specfic letters exist in the word
 function allLetters (letter) {
     // alert(letter);
-    var specficLetter = false;
+
+    var specificLetter = false;
     for (var i=0; i<numBlanks; i++){
         if(selectedWord[i] == letter) {
-            specficLetter = true;
+            specificLetter = true;
             // alert("Correct Letter");
         }
     } 
 
-    if(allLetters) {
+    if(specificLetter) {
         for (var i=0; i<numBlanks; i++) {
             if(selectedWord[i] == letter) {
                 blanksAndSuccesses[i] = letter;
@@ -63,21 +64,54 @@ function allLetters (letter) {
     }
 
     else {
-        lettersWrong.push(letter);
-        numGuesses--
+        lettersWrong.push(letter); //computer was not able to find the letter 
+        guessesLeft--
     }
 
     
     console.log(blanksAndSuccesses)
 }
 
-//
+function complete(){
+    console.log("Win Count: " + winCount + " | Loss Count: " + lossCount + " | Guesses Left " + guessesLeft);
+
+    document.getElementById("wordToGuess").innerHTML = blanksAndSuccesses.join(" "); //populates the users clicks 
+    document.getElementById("numGuesses").innerHTML = guessesLeft;
+    document.getElementById("wrongGuesses").innerHTML= lettersWrong.join (" ");
+
+
+    //Need to create function to determine if user has won game 
+    if (lettersinWord.toString() == blanksAndSuccesses.toString()) {
+        winCount++;
+        alert("Congratulations YOU WON!");
+
+        //Convert over to HTML
+        document.getElementById("winCounter").innerHTML = winCount;
+        
+        startGame();
+
+    }
+
+    else if (guessesLeft == 0) {
+        lossCount++;
+        alert("You lose, try again!");
+
+        document.getElementById("lossCounter").innerHTML = lossCount;
+
+        startGame();
+    }
+
+}
+
+//===================================
 startGame()
 
-//Registering keyclicks
+//Registering the users clicks 
+
 document.onkeyup = function(event) {
     var letterGuessed = String.fromCharCode(event.keyCode).toLowerCase();
     allLetters(letterGuessed);
+    complete();
         
     //testing  
     console.log(letterGuessed)
